@@ -7,24 +7,24 @@ public class Parser {
     private static ArrayList<String> states = new ArrayList<String>();
     private static ArrayList<String> borders = new ArrayList<String>();
     public Parser(String filePath){
-        int blankIndex = 0;
+        int blankIndex = 0; //how many blank line dividers has the parser gone through yet - distinguish colors from states from borders
         BufferedReader reader;
         try {
             reader = new BufferedReader(new FileReader(filePath));
             String line = reader.readLine();
             while (line != null) {
-                if(line.isEmpty()){
-                    blankIndex++;
-                    line = reader.readLine();
+                if(line.isEmpty()){ //parser is at a blank line dividing category of information
+                    blankIndex++; //increase blank index iterator
+                    line = reader.readLine(); //move to next line
                 }
                 if(blankIndex==0){
-                    colors.add(line);
+                    colors.add(line); //before the first blank line - all colors
                 }
                 if(blankIndex==1){
-                    states.add(line);
+                    states.add(line); //before second blank line - all states
                 }
                 if(blankIndex==2){
-                    borders.add(line);
+                    borders.add(line); //after second blank line - all borders
                 }
                 // read next line
                 line = reader.readLine();

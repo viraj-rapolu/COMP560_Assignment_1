@@ -4,25 +4,32 @@ import java.util.List;
 public class Assignment1 {
     public static void main(String[] args) {
         String filePath = "C:\\Users\\manuk\\Documents\\COMP 560\\Australia.txt.txt";
-        Parser fileParse = new Parser(filePath);
+        Parser fileParse = new Parser(filePath); //parse file
+
         ArrayList allColors = new ArrayList();
         ArrayList allStates = new ArrayList();
         ArrayList allBorders = new ArrayList();
+
         allColors = fileParse.getColors();
         allStates = fileParse.getStates();
         allBorders = fileParse.getBorders();
-        List<State> stateList = new ArrayList<State>();
+
+        List<State> stateList = new ArrayList<State>(); //list of all States
         for(int i = 0; i<allStates.size(); i++){
-            ArrayList<String> borders = new ArrayList<String>();
-            String stateString = (String)(allStates.get(i));
+            ArrayList<String> borders = new ArrayList<String>(); //empty border list for current state
+            String stateString = (String)(allStates.get(i)); //current state string
             for(int j = 0; j<allBorders.size(); j++) {
-                String borderString = (String) (allBorders.get(j));
-                if (borderString.contains(stateString)) {
-                    borderString = borderString.replace(stateString, "");
-                    borderString = borderString.replace(" ", "");
-                    borders.add(borderString);
+                String borderString = (String) (allBorders.get(j)); //current border pair string
+                if (borderString.contains(stateString)) { //if border pair contains current state - then the other state borders it
+                    borderString = borderString.replace(stateString, ""); //remove current state from border pair
+                    borderString = borderString.replace(" ", ""); //remove spaces from border pair
+                    borders.add(borderString); //add bordering state to list of states bordering current state
                 }
             }
+            System.out.println(stateString);
+            System.out.println(borders);
+            System.out.println(allColors);
+            //create new state object with name of current state, list of bordering states, list of colors and add to list of states
             stateList.add(new State(stateString, borders, allColors));
         }
 //        System.out.println(fileParse.getColors());

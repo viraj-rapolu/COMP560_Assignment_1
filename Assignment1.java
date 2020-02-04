@@ -14,26 +14,33 @@ public class Assignment1 {
         allStates = fileParse.getStates();
         allBorders = fileParse.getBorders();
 
-        List<State> stateList = new ArrayList<State>(); //list of all States
+        ArrayList <State> stateList = new ArrayList<State>(); //list of all States
+
         for(int i = 0; i<allStates.size(); i++){
+            //System.out.println(i);
+
             ArrayList<String> borders = new ArrayList<String>(); //empty border list for current state
             String stateString = (String)(allStates.get(i)); //current state string
             for(int j = 0; j<allBorders.size(); j++) {
                 String borderString = (String) (allBorders.get(j)); //current border pair string
-                if (borderString.contains(stateString)) { //if border pair contains current state - then the other state borders it
-                    borderString = borderString.replace(stateString, ""); //remove current state from border pair
+                if (borderString.contains((String)(allStates.get(i)))) { //if border pair contains current state - then the other state borders it
+                    borderString = borderString.replace((String)(allStates.get(i)), ""); //remove current state from border pair
                     borderString = borderString.replace(" ", ""); //remove spaces from border pair
                     borders.add(borderString); //add bordering state to list of states bordering current state
                 }
             }
-            System.out.println(stateString);
-            System.out.println(borders);
-            System.out.println(allColors);
             //create new state object with name of current state, list of bordering states, list of colors and add to list of states
             stateList.add(new State(stateString, borders, allColors));
         }
 //        System.out.println(fileParse.getColors());
 //        System.out.println(fileParse.getStates());
 //        System.out.println(fileParse.getBorders());
+        //LocalSearch search = new LocalSearch(stateList, allColors);
+        //search.randStart();
+        for(int u = 0; u<stateList.size(); u++){
+            State state = stateList.get(u);
+            System.out.println(state.getName());
+            System.out.println(state.getBorderStates());
+        }
     }
 }

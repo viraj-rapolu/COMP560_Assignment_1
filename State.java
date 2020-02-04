@@ -8,6 +8,7 @@ public class State {
     public ArrayList<String> brokenColors = new ArrayList(); //list of colors state cannot be
     public int numBrokeColors = 0; //number of colors state cannot be
     public String assignedColor = "blank"; //assigned color of state
+    private int numViolations = 0;
     public State(String name, ArrayList<String> borderArray, ArrayList<String> colors){
         stateName = name;
         borderStates = borderArray;
@@ -42,6 +43,15 @@ public class State {
     }
     public String toString(){
         return stateName+": "+assignedColor;
+    }
+    public void setNumViolations(int numViol){
+        numViolations = numViol;
+    }
+    public int getNumViolations(){
+        return numViolations;
+    }
+    public void removeColor(String color){
+        colorList.remove(color);
     }
 }
 

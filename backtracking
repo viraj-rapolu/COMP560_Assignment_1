@@ -24,13 +24,15 @@ public class backtracking {
         head = randColorAssign(head);
         ArcConst( stateList, unassignedStateQ, head); // Add the random color to bordering states' broken colors
 
+        // Is the framework of this a loop after the first state? Should we start that here?
         // Choose next state to visit
 
         //create a Queue and pop of the first state at random
+        
         /***assign state a color and update the status of each and every state.  Check to see if any states have a conflict. If not
-        place the state in a finished queue. This is for easy reverse traversal if a road block is encountered
-            If a road block is encountered (a state has no potential color assignments) assign the state of choice a different color and
-            recheck arc consistency.  If a potential color exists, continue. If not pop the previous state of the finished Queue
+         place the state in a finished queue. This is for easy reverse traversal if a road block is encountered
+         If a road block is encountered (a state has no potential color assignments) assign the state of choice a different color and
+         recheck arc consistency.  If a potential color exists, continue. If not pop the previous state of the finished Queue
          and change its color and continue.
          continue until all states are finished
          ***/

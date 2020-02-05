@@ -1,0 +1,103 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
+import java.util.LinkedList;
+import java.util.Random;
+
+
+public class backtracking {
+    public backtracking(List<State> stateListInput){
+
+        List<State> stateList = stateListInput;
+        Queue<State> unassignedStateQ = new LinkedList<>();
+        Queue<State> finishedStateQ = new LinkedList<>();
+        List<State> traversed = new ArrayList<>(); // List of states that have been visited. Might need to replace this with a tree in future
+
+        for (State state : stateList){
+            unassignedStateQ.add(state);
+        }
+
+        State head = unassignedStateQ.peek();
+        traversed.add(head);
+
+        //assign a color
+        head = randColorAssign(head);
+        ArcConst( stateList, unassignedStateQ, head); // Add the random color to bordering states' broken colors
+
+        // Choose next state to visit
+
+        //create a Queue and pop of the first state at random
+        /***assign state a color and update the status of each and every state.  Check to see if any states have a conflict. If not
+        place the state in a finished queue. This is for easy reverse traversal if a road block is encountered
+            If a road block is encountered (a state has no potential color assignments) assign the state of choice a different color and
+            recheck arc consistency.  If a potential color exists, continue. If not pop the previous state of the finished Queue
+         and change its color and continue.
+         continue until all states are finished
+         ***/
+
+        /*** changes to make:
+         *  States: need to track what colors a state can potentially have as well as colors it cannot have (both color lists should be updated
+         *  Arc Consistency: should check potential color options for all states, making sure each has at least one
+         *  good to include recursion
+         *
+         */
+
+
+
+
+
+
+    }
+
+    public State nextState(State state) {
+        ArrayList<State> neighbors = state.getBorderStates();
+        int borderCount = 0;
+        List<State> mostConstraining = new ArrayList<>();
+        List<State> leastConstrained = new ArrayList<>();
+
+        int numColors = state.getColorList().size();
+
+        for (State neighbor: neighbors){
+            // Check to see if backtrack is necessary. Should we do this here or elsewhere?
+            backtrack(neighbor);
+
+            // Choose states that are least constrained
+            if (neighbor.getNumBrokeColors() <= numColors) {
+                numColors = neighbor.getNumBrokeColors();
+                leastConstrained.add(neighbor);
+                // Choose states that are most constraining
+                if (neighbor.getBorderStates().size() >= borderCount) {
+                    borderCount = neighbor.getBorderStates().size();
+                    mostConstraining.add(neighbor);
+                }
+            }
+        }
+        // Choose random state from mostConstraining to get next state to move on to
+        return mostConstraining.get(0);
+    }
+
+    public void backtrack(State state) {
+
+        // Function that checks if a state has all colors broken. If so, do something
+    }
+
+    public State randColorAssign(State state){
+        List<String> colorList = state.getColorList();
+        Random rand = new Random();
+        state.assignedColor =  colorList.get(rand.nextInt(colorList.size()));
+        return state;
+    }
+
+    public void ArcConst(List<State> stateList, Queue<State> stateQ, State head){
+        ArrayList<State> neighbors = head.getBorderStates();
+        String headColor = head.assignedColor;
+        for(State neighbor: neighbors){
+
+            stateList.get(stateList.indexOf(neighbor)).addBrokenColors(headColor); //creates a list of colors that CANNOT be used
+        }
+
+    }
+
+
+
+}

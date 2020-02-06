@@ -6,6 +6,8 @@ import java.util.Random;
 
 
 public class backtracking {
+    public static List<State> stateListInput;
+
     public backtracking(List<State> stateListInput){
 
         List<State> stateList = stateListInput;
@@ -17,12 +19,15 @@ public class backtracking {
             unassignedStateQ.add(state);
         }
 
-        State head = unassignedStateQ.peek();
+        State head = unassignedStateQ.peek(); //take first state
         traversed.add(head);
+        finishedStateQ.add(head);
+        //mark first state as reached
+
 
         //assign a color
         head = randColorAssign(head);
-        ArcConst( stateList, unassignedStateQ, head); // Add the random color to bordering states' broken colors
+        ArcConst(stateList, unassignedStateQ, head); // Add the random color to bordering states' broken colors
 
         // Choose next state to visit
 
@@ -51,6 +56,7 @@ public class backtracking {
 
     public State nextState(State state) {
         ArrayList<State> neighbors = state.getBorderStates();
+        
         int borderCount = 0;
         List<State> mostConstraining = new ArrayList<>();
         List<State> leastConstrained = new ArrayList<>();
@@ -81,6 +87,19 @@ public class backtracking {
         // Function that checks if a state has all colors broken. If so, do something
     }
 
+    public boolean colorCheck(State head, List<State> statesList) { //actually have to go back and update color list!!!
+        String headColor = head.assignedColor;
+        List<State> neighborStates= new ArrayList<State>();
+        for (String neighborNames : head.borderStates){
+            State neighbor = findStateByName(neighborNames, statesList);
+            List neighborColors = neighbor.colorList;
+            if (neighborColors.contains(headColor)){
+                neighborColors.remove(headColor);
+            }
+            if (neighbor.getColorList().size()==0){ return true;} //a neighbor has no potential color options so backtrack
+        } return false;
+    }
+
     public State randColorAssign(State state){
         List<String> colorList = state.getColorList();
         Random rand = new Random();
@@ -88,16 +107,47 @@ public class backtracking {
         return state;
     }
 
-    public void ArcConst(List<State> stateList, Queue<State> stateQ, State head){
+    public boolean ArcConst(List<State> stateList, Queue<State> stateQ, State head){
         ArrayList<State> neighbors = head.getBorderStates();
-        String headColor = head.assignedColor;
-        for(State neighbor: neighbors){
+        //if true, we would update all the neighbor's color lists
+        //if false, we would need to assign a different color and crun the colorCheck again
+        List<String> colorList;
+        colorList = (ArrayList)head.getColorList().clone();
+        
+        for(String color: colorList){
+            head.assignedColor = color;
+            boolean changeColor = colorCheck(head, stateList); // if this bool is true, neighbors have issues, change color
 
-            stateList.get(stateList.indexOf(neighbor)).addBrokenColors(headColor); //creates a list of colors that CANNOT be used
+            if (!changeColor) {
+
+                for (String neighborNames : head.borderStates){
+                    String headColor = head.assignedColor;
+
+                    State neighbor = findStateByName(neighborNames, stateList);
+                    List neighborColors = neighbor.colorList;
+                    if (neighborColors.contains(headColor)){
+                        neighborColors.remove(headColor);
+                    }
+                    if (neighbor.getColorList().size()==0){ return true;} //a neighbor has no potential color options so backtrack
+                }
+
+                // update each neighbor's color lists by removing "head"s color
+
+                return true;
+            }
         }
+
+
+        return false;
 
     }
 
-
-
+    public State findStateByName(String name, List<State> states){
+        for(State state : states){
+            if(state.getName().equals(name)){
+                return state;
+            }
+        }
+        return null;
+    }
 }

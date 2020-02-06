@@ -3,7 +3,7 @@ import java.util.List;
 
 public class Assignment1 {
     public static void main(String[] args) {
-        String filePath = "C:\\Users\\manuk\\Documents\\COMP 560\\Australia.txt.txt";
+        String filePath = "C:\\Users\\manuk\\Documents\\COMP 560\\USA.txt";
         Parser fileParse = new Parser(filePath); //parse file
 
         ArrayList allColors = new ArrayList();
@@ -35,12 +35,30 @@ public class Assignment1 {
 //        System.out.println(fileParse.getColors());
 //        System.out.println(fileParse.getStates());
 //        System.out.println(fileParse.getBorders());
-        //LocalSearch search = new LocalSearch(stateList, allColors);
-        //search.randStart();
-        for(int u = 0; u<stateList.size(); u++){
-            State state = stateList.get(u);
-            System.out.println(state.getName());
-            System.out.println(state.getBorderStates());
-        }
+        LocalSearch search = new LocalSearch(stateList, allColors);
+        search.runSearch();
+//        search.randStart();
+//        search.findNumViolations();
+//        for(int u = 0; u<stateList.size(); u++){
+//            State state = stateList.get(u);
+//            System.out.println(state.getName());
+//            System.out.println(state.getBorderStates());
+//        }
+//        System.out.println("State with most violations: "+ search.findStateMostViol().getName());
+//        stateList = search.fixViolation();
+//        search.findNumViolations();
+//        for(int u = 0; u<stateList.size(); u++){
+//            State state = stateList.get(u);
+//            System.out.println(state.toString());
+//            System.out.println(state.getNumViolations());
+//        }
+//        stateList = search.fixViolation();
+//        search.findNumViolations();
+//        for(int u = 0; u<stateList.size(); u++){
+//            State state = stateList.get(u);
+//            System.out.println(state.toString());
+//            System.out.println(state.getNumViolations());
+//        }
+
     }
 }

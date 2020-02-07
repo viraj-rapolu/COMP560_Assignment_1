@@ -13,7 +13,8 @@ public class backtracking {
         List<State> stateList = stateListInput;
         Queue<State> unassignedStateQ = new LinkedList<>();
         Queue<State> finishedStateQ = new LinkedList<>();
-        List<State> traversed = new ArrayList<>(); // List of states that have been visited. Might need to replace this with a tree in future
+        // When backtracking, reintroduce the color back based on looking at it's available nodes
+        // List<State> traversed = new ArrayList<>(); // List of states that have been visited. Might need to replace this with a tree in future
 
         for (State state : stateList){
             unassignedStateQ.add(state);
@@ -27,15 +28,19 @@ public class backtracking {
 
         //assign a color
         head = randColorAssign(head);
-        ArcConst(stateList, unassignedStateQ, head); // Add the random color to bordering states' broken colors
+        bool test = ArcConst(stateList, unassignedStateQ, head); // Add the random color to bordering states' broken colors
+        if (test) {
+            State next = nextState(head);
+            bool ArcConst(head)
+        }
 
         // Choose next state to visit
 
         //create a Queue and pop of the first state at random
         /***assign state a color and update the status of each and every state.  Check to see if any states have a conflict. If not
-        place the state in a finished queue. This is for easy reverse traversal if a road block is encountered
-            If a road block is encountered (a state has no potential color assignments) assign the state of choice a different color and
-            recheck arc consistency.  If a potential color exists, continue. If not pop the previous state of the finished Queue
+         place the state in a finished queue. This is for easy reverse traversal if a road block is encountered
+         If a road block is encountered (a state has no potential color assignments) assign the state of choice a different color and
+         recheck arc consistency.  If a potential color exists, continue. If not pop the previous state of the finished Queue
          and change its color and continue.
          continue until all states are finished
          ***/
@@ -56,7 +61,7 @@ public class backtracking {
 
     public State nextState(State state) {
         ArrayList<State> neighbors = state.getBorderStates();
-        
+
         int borderCount = 0;
         List<State> mostConstraining = new ArrayList<>();
         List<State> leastConstrained = new ArrayList<>();
@@ -65,7 +70,7 @@ public class backtracking {
 
         for (State neighbor: neighbors){
             // Check to see if backtrack is necessary. Should we do this here or elsewhere?
-            backtrack(neighbor);
+            // backtrack(neighbor);
 
             // Choose states that are least constrained
             if (neighbor.getNumBrokeColors() <= numColors) {
@@ -87,16 +92,17 @@ public class backtracking {
         // Function that checks if a state has all colors broken. If so, do something
     }
 
-    public boolean colorCheck(State head, List<State> statesList) { //actually have to go back and update color list!!!
+    public boolean colorCheck(State head, List<State> statesList) throws CloneNotSupportedException { //actually have to go back and update color list!!!
         String headColor = head.assignedColor;
         List<State> neighborStates= new ArrayList<State>();
         for (String neighborNames : head.borderStates){
             State neighbor = findStateByName(neighborNames, statesList);
-            List neighborColors = neighbor.colorList;
+            State tmp = (State)((State)neighbor).clone();
+            List neighborColors = tmp.colorList;
             if (neighborColors.contains(headColor)){
                 neighborColors.remove(headColor);
             }
-            if (neighbor.getColorList().size()==0){ return true;} //a neighbor has no potential color options so backtrack
+            if (tmp.getColorList().size()==0){ return true;} //a neighbor has no potential color options so backtrack
         } return false;
     }
 
@@ -113,10 +119,11 @@ public class backtracking {
         //if false, we would need to assign a different color and crun the colorCheck again
         List<String> colorList;
         colorList = (ArrayList)head.getColorList().clone();
-        
+
         for(String color: colorList){
             head.assignedColor = color;
             boolean changeColor = colorCheck(head, stateList); // if this bool is true, neighbors have issues, change color
+            // check the statelist to see if any of the states have had changes
 
             if (!changeColor) {
 
@@ -128,7 +135,9 @@ public class backtracking {
                     if (neighborColors.contains(headColor)){
                         neighborColors.remove(headColor);
                     }
-                    if (neighbor.getColorList().size()==0){ return true;} //a neighbor has no potential color options so backtrack
+                    if (neighbor.getColorList().size()==0){ return false;
+                    // call backtrack
+                    } //a neighbor has no potential color options so backtrack
                 }
 
                 // update each neighbor's color lists by removing "head"s color
